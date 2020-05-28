@@ -129,11 +129,11 @@ rolebinding "jenkins_edit" configured
 build:
 ```bash
 $ oc process -f .openshift/templates/deployment.yml \
- -p=APPLICATION_NAME=basic-dotnet-core
+ -p APPLICATION_NAME=basic-dotnet-core \
  -p NAMESPACE=basic-dotnet-core-stage \
-  -p=SA_NAMESPACE=basic-dotnet-core-build \
-  -p=READINESS_PATH="" \
-  -p=READINESS_RESPONSE="" | oc apply -f-
+ -p SA_NAMESPACE=basic-dotnet-core-build \
+ -p READINESS_PATH="" \
+ -p READINESS_RESPONSE="" | oc apply -f-
 
 service "basic-dotnet-core" created
 route "basic-dotnet-core" created
@@ -145,11 +145,11 @@ rolebinding "jenkins_edit" created
 prod:
 ```bash
 $ oc process -f .openshift/templates/deployment.yml \
-  -p=APPLICATION_NAME=basic-dotnet-core \
-   -p NAMESPACE=basic-dotnet-core-prod \
-  -p=SA_NAMESPACE=basic-dotnet-core-build \
-  -p=READINESS_PATH="" \
-  -p=READINESS_RESPONSE="" | oc apply -f-
+  -p APPLICATION_NAME=basic-dotnet-core \
+  -p NAMESPACE=basic-dotnet-core-prod \
+  -p SA_NAMESPACE=basic-dotnet-core-build \
+  -p READINESS_PATH="" \
+  -p READINESS_RESPONSE="" | oc apply -f-
 
 service "basic-dotnet-core" created
 route "basic-dotnet-core" created
