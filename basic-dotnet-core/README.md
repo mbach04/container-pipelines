@@ -110,23 +110,31 @@ A _deploy template_ is provided at `.openshift/templates/deployment.yml` that de
 This template should be instantiated once in each of the namespaces that our app will be deployed to. For this purpose, we have created a param file to be fed to `oc process` to customize the template for each environment.
 
 Deploy the deployment template to all three projects.
-```
-$ oc process -f .openshift/templates/deployment.yml -p=APPLICATION_NAME=basic-dotnet-core
- -p NAMESPACE=basic-dotnet-core-dev -p=SA_NAMESPACE=basic-dotnet-core-build -p=READINESS_PATH="/health" -p=READINESS_RESPONSE="status.:.UP" -p | oc apply -f-
+
+dev:
+```bash
+$ oc process -f .openshift/templates/deployment.yml \
+ -p APPLICATION_NAME=basic-dotnet-core \
+ -p NAMESPACE=basic-dotnet-core-dev \
+ -p SA_NAMESPACE=basic-dotnet-core-build \
+ -p READINESS_PATH="" \
+ -p READINESS_RESPONSE="" | oc apply -f-
 service "basic-dotnet-core" created
 route "basic-dotnet-core" created
 imagestream "basic-dotnet-core" created
 deploymentconfig "basic-dotnet-core" created
 rolebinding "jenkins_edit" configured
-$ oc process -f .openshift/templates/deployment.yml -p=APPLICATION_NAME=basic-dotnet-core
- -p NAMESPACE=basic-dotnet-core-stage -p=SA_NAMESPACE=basic-dotnet-core-build -p=READINESS_PATH="/health" -p=READINESS_RESPONSE="status.:.UP" -p | oc apply -f- | oc apply -f-
-service "basic-dotnet-core" created
-route "basic-dotnet-core" created
-imagestream "basic-dotnet-core" created
-deploymentconfig "basic-dotnet-core" created
-rolebinding "jenkins_edit" created
-$ oc process -f .openshift/templates/deployment.yml -p=APPLICATION_NAME=basic-dotnet-core
- -p NAMESPACE=basic-dotnet-core-prod -p=SA_NAMESPACE=basic-dotnet-core-build -p=READINESS_PATH="/health" -p=READINESS_RESPONSE="status.:.UP" -p | oc apply -f-
+```
+
+build:
+```bash
+$ oc process -f .openshift/templates/deployment.yml \
+ -p=APPLICATION_NAME=basic-dotnet-core
+ -p NAMESPACE=basic-dotnet-core-stage \
+  -p=SA_NAMESPACE=basic-dotnet-core-build \
+  -p=READINESS_PATH="" \
+  -p=READINESS_RESPONSE="" | oc apply -f-
+
 service "basic-dotnet-core" created
 route "basic-dotnet-core" created
 imagestream "basic-dotnet-core" created
@@ -134,15 +142,35 @@ deploymentconfig "basic-dotnet-core" created
 rolebinding "jenkins_edit" created
 ```
 
-A _build template_ is provided at `applier/templates/build.yml` that defines all the resources required to build our .NET Core app. It includes:
+prod:
+```bash
+$ oc process -f .openshift/templates/deployment.yml \
+  -p=APPLICATION_NAME=basic-dotnet-core \
+   -p NAMESPACE=basic-dotnet-core-prod \
+  -p=SA_NAMESPACE=basic-dotnet-core-build \
+  -p=READINESS_PATH="" \
+  -p=READINESS_RESPONSE="" | oc apply -f-
+
+service "basic-dotnet-core" created
+route "basic-dotnet-core" created
+imagestream "basic-dotnet-core" created
+deploymentconfig "basic-dotnet-core" created
+rolebinding "jenkins_edit" created
+```
+
+A _build template_ is provided at `.openshift/templates/build.yml` that defines all the resources required to build our .NET Core app. It includes:
 
 * A `BuildConfig` that defines a `JenkinsPipelineStrategy` build, which will be used to define out pipeline.
 * A `BuildConfig` that defines a `Source` build with `Binary` input. This will build our image.
 
 Deploy the pipeline template in build only.
-```
-$ oc process -f applier/templates/build.yml -p=APPLICATION_NAME=basic-dotnet-core
- -p NAMESPACE=basic-dotnet-core-dev -p=SOURCE_REPOSITORY_URL="https://github.com/redhat-cop/container-pipelines.git" -p=APPLICATION_SOURCE_REPO="https://github.com/redhat-developer/s2i-dotnetcore-ex.git" | oc apply -f-
+```bash
+$ oc process -f .openshift/templates/build.yml \
+ -p APPLICATION_NAME=basic-dotnet-core \
+ -p NAMESPACE=basic-dotnet-core-dev \
+ -p SOURCE_REPOSITORY_URL="https://github.com/redhat-cop/container-pipelines.git" \
+ -p APPLICATION_SOURCE_REPO="https://github.com/redhat-developer/s2i-dotnetcore-ex.git" | oc apply -f-
+
 buildconfig "basic-dotnet-core-pipeline" created
 buildconfig "basic-dotnet-core" created
 ```
@@ -153,6 +181,9 @@ At this point you should be able to go to the Web Console and follow the pipelin
 
 Cleaning up this example is as simple as deleting the projects we created at the beginning.
 
-```
-oc delete project basic-dotnet-core-build basic-dotnet-core-dev basic-dotnet-core-prod basic-dotnet-core-stage
+```bash
+$ oc delete project basic-dotnet-core-build \
+ basic-dotnet-core-dev \
+ basic-dotnet-core-prod \
+ basic-dotnet-core-stage
 ```
