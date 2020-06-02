@@ -69,7 +69,7 @@ pipeline {
 
     stage ('Verify Deployment to Dev') {
       steps {
-        verifyDeployment(projectName: env.DEV, targetApp: env.APP_NAME)
+        // verifyDeployment(projectName: env.DEV, targetApp: env.APP_NAME)
       }
     }
 
@@ -81,7 +81,7 @@ pipeline {
 
     stage ('Verify Deployment to Stage') {
       steps {
-        verifyDeployment(projectName: env.STAGE, targetApp: env.APP_NAME)
+        // verifyDeployment(projectName: env.STAGE, targetApp: env.APP_NAME)
       }
     }
 
@@ -101,7 +101,7 @@ pipeline {
 
     stage ('Verify Deployment to Prod') {
       steps {
-        verifyDeployment(projectName: env.PROD, targetApp: env.APP_NAME)
+        // verifyDeployment(projectName: env.PROD, targetApp: env.APP_NAME)
       }
     }
   }

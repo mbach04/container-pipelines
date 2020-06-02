@@ -117,8 +117,9 @@ $ oc process -f .openshift/templates/deployment.yml \
  -p APPLICATION_NAME=basic-dotnet-core \
  -p NAMESPACE=basic-dotnet-core-dev \
  -p SA_NAMESPACE=basic-dotnet-core-build \
- -p READINESS_PATH="" \
- -p READINESS_RESPONSE="" | oc apply -f-
+ -p READINESS_PATH="/" \
+ -p READINESS_RESPONSE=":" | oc apply -f-
+ 
 service "basic-dotnet-core" created
 route "basic-dotnet-core" created
 imagestream "basic-dotnet-core" created
@@ -132,8 +133,8 @@ $ oc process -f .openshift/templates/deployment.yml \
  -p APPLICATION_NAME=basic-dotnet-core \
  -p NAMESPACE=basic-dotnet-core-stage \
  -p SA_NAMESPACE=basic-dotnet-core-build \
- -p READINESS_PATH="" \
- -p READINESS_RESPONSE="" | oc apply -f-
+ -p READINESS_PATH="/" \
+ -p READINESS_RESPONSE=":" | oc apply -f-
 
 service "basic-dotnet-core" created
 route "basic-dotnet-core" created
@@ -148,8 +149,8 @@ $ oc process -f .openshift/templates/deployment.yml \
   -p APPLICATION_NAME=basic-dotnet-core \
   -p NAMESPACE=basic-dotnet-core-prod \
   -p SA_NAMESPACE=basic-dotnet-core-build \
-  -p READINESS_PATH="" \
-  -p READINESS_RESPONSE="" | oc apply -f-
+  -p READINESS_PATH="/" \
+  -p READINESS_RESPONSE=":" | oc apply -f-
 
 service "basic-dotnet-core" created
 route "basic-dotnet-core" created
@@ -168,7 +169,7 @@ Deploy the pipeline template in build only.
 $ oc process -f .openshift/templates/build.yml \
  -p APPLICATION_NAME=basic-dotnet-core \
  -p NAMESPACE=basic-dotnet-core-dev \
- -p SOURCE_REPOSITORY_URL="https://github.com/redhat-cop/container-pipelines.git" \
+ -p SOURCE_REPOSITORY_URL="https://github.com/mbach04/container-pipelines.git" \
  -p APPLICATION_SOURCE_REPO="https://github.com/redhat-developer/s2i-dotnetcore-ex.git" | oc apply -f-
 
 buildconfig "basic-dotnet-core-pipeline" created
